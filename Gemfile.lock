@@ -1,0 +1,19 @@
+PATH
+  remote: .
+  specs:
+    judge0 (0.0.1)
+      excon (>= 0.71.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    excon (0.71.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  judge0!
+
+BUNDLED WITH
+   2.0.2
