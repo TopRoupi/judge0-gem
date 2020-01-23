@@ -2,12 +2,14 @@ PATH
   remote: .
   specs:
     judge0 (0.0.1)
-      excon (>= 0.71.1)
+      faraday (>= 1.0.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    excon (0.71.1)
+    faraday (1.0.0)
+      multipart-post (>= 1.2, < 3)
+    multipart-post (2.1.1)
 
 PLATFORMS
   ruby

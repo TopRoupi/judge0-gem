@@ -18,28 +18,38 @@ module Judge0
       yield(self) if block_given?
     end
 
-    def get_token
-      resp = Faraday.post('https://api.judge0.com/submissions', to_hash)
-      @token = JSON.parse(resp.body)['token']
-    end
-
     def run
-      begin
-        resp = Faraday.get("https://api.judge0.com/submissions/#{get_token}")
-        body = JSON.parse(resp.body)
-        status = body['status']['id']
-      end while status == 2
+      res = wait_response(get_token)
 
-      @stdout = body['stdout']
-      @time = body['time'].to_f
-      @memory = body['memory']
-      @stderr = body['stderr']
-      @compile_out = body['compile_out']
-      @message = body['message']
-      @status_id = body['status']['id']
-      @status_description = body['status']['description']
+      @stdout = res['stdout']
+      @time = res['time'].to_f
+      @memory = res['memory']
+      @stderr = res['stderr']
+      @compile_out = res['compile_out']
+      @message = res['message']
+      @status_id = res['status']['id']
+      @status_description = res['status']['description']
 
       result
+    end
+
+    def tests_battery (tests)
+      tests.map! do |test|
+        if test.respond_to?(:input) && test.respond_to?(:output)
+          @stdin = test.input
+          @expected_output = test.output
+        elsif test.include?(:input) && test.respond_to?(:output)
+          @stdin = test[:input]
+          @expected_output = test[:output]
+        else
+          @stdin = test[0]
+          @expected_output = test[1]
+        end
+        get_token
+      end
+      tests.map do |test|
+        wait_response(test)
+      end
     end
 
     def result
@@ -57,8 +67,23 @@ module Judge0
       }
     end
 
+    private 
+
     def to_hash
       Hash[instance_variables.map { |name| [name[1..-1].to_sym, instance_variable_get(name)] } ]
+    end
+
+    def get_token
+      resp = Faraday.post('https://api.judge0.com/submissions', to_hash)
+      @token = JSON.parse(resp.body)['token']
+    end
+
+    def wait_response(token)
+      begin
+        resp = Faraday.get("https://api.judge0.com/submissions/#{token}")
+        body = JSON.parse(resp.body)
+      end while body['status']['id'] <= 2
+      body
     end
   end
 end
