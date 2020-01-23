@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.description = 'ruby interface for judge0 api.'
   s.authors     = ['Breno Nunes']
   s.email       = 'breno.nunesgalvao@protonmail.ch'
-  s.files       = ['lib/judge0.rb']
+  s.files       = %w[LICENSE README.md judge0.gemspec] + Dir['lib/**/*.rb']
   s.homepage    = 'https://github.com/TopRoupi/judge0-gem'
   s.license     = 'MIT'
 

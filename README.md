@@ -26,3 +26,11 @@ end
 sub.run # hash of the submission result
 sub.stdout # output
 ```
+
+```ruby
+require 'pp'
+pp Judge0.languages
+pp Judge0.statuses
+pp Judge0.system_info
+pp Judge0.config_info
+```
