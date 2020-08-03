@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'judge0'
-  s.version     = '0.0.1'
+  s.version     = '0.0.3'
   s.date        = '2020-01-20'
   s.summary     = 'ruby interface for judge0 api.'
   s.description = 'ruby interface for judge0 api.'

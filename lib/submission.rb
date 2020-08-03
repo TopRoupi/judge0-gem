@@ -70,18 +70,24 @@ module Judge0
     private 
 
     def to_hash
-      Hash[instance_variables.map { |name| [name[1..-1].to_sym, instance_variable_get(name)] } ]
+      Hash[
+        instance_variables.map do |name|
+          [name[1..-1].to_sym, instance_variable_get(name)]
+        end
+      ]
     end
 
     def get_token
-      resp = Faraday.post('https://api.judge0.com/submissions', to_hash)
+      resp = Faraday.post(Judge0.url('/submissions/?base64_encoded=false&wait=false'), to_hash)
       @token = JSON.parse(resp.body)['token']
     end
 
     def wait_response(token)
       begin
-        resp = Faraday.get("https://api.judge0.com/submissions/#{token}")
+        resp = Faraday.get(Judge0.url("/submissions/#{token}"))
         body = JSON.parse(resp.body)
+        p body
+        puts "waiting: #{token} - #{body['status']['description']}"
       end while body['status']['id'] <= 2
       body
     end

@@ -17,6 +17,12 @@ gem 'judge0'
 
 ## Usage Examples
 
+### set a custom url
+
+```ruby
+  Judge0.base_url = 'http://api.custom-judge0.com'
+```
+
 ### simple code execution
 
 ```ruby
@@ -91,4 +97,24 @@ pp Judge0::languages
 pp Judge0::statuses
 pp Judge0::system_info
 pp Judge0::config_info
+```
+
+## development
+
+### test
+
+```bash
+  irb -Ilib -r judge0
+```
+
+### build
+
+```bash
+  gem build judge0.gemspec
+```
+
+### push
+
+```bash
+  gem push judge0-x.x.x.gem
 ```
