@@ -61,13 +61,20 @@ module Judge0
         compile_out: @compile_out,
         message: @message,
         status: {
-          id: @status_id, 
+          id: @status_id,
           description: @status_description
         }
       }
     end
 
-    private 
+    def output
+      msg = @stdout
+      msg +="\nERROR:\n#{@stderr}" if @stderr
+      msg += "\nMESSAGE:\n#{@message}" if @message
+      msg
+    end
+
+    private
 
     def to_hash
       Hash[
@@ -86,8 +93,7 @@ module Judge0
       begin
         resp = Faraday.get(Judge0.url("/submissions/#{token}"))
         body = JSON.parse(resp.body)
-        p body
-        puts "waiting: #{token} - #{body['status']['description']}"
+        puts "waiting: #{token} - #{body['status']['description']}" unless ENV['RAILS_ENV'] == 'test'
       end while body['status']['id'] <= 2
       body
     end
