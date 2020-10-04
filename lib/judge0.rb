@@ -4,7 +4,7 @@ require 'json'
 require 'submission.rb'
 
 module Judge0
-  @@base_url = 'https://api.judge0.com/'
+  @@base_url = 'http://roupi.xyz:3000/'
 
   def self.base_url=(url)
     @@base_url = url

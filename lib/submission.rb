@@ -19,18 +19,9 @@ module Judge0
     end
 
     def run
-      res = wait_response(get_token)
+      get_token
 
-      @stdout = res['stdout']
-      @time = res['time'].to_f
-      @memory = res['memory']
-      @stderr = res['stderr']
-      @compile_out = res['compile_out']
-      @message = res['message']
-      @status_id = res['status']['id']
-      @status_description = res['status']['description']
-
-      result
+      wait_response!
     end
 
     def tests_battery (tests)
@@ -48,7 +39,7 @@ module Judge0
         get_token
       end
       tests.map do |test|
-        wait_response(test)
+        wait_response
       end
     end
 
@@ -68,13 +59,12 @@ module Judge0
     end
 
     def output
-      msg = @stdout
-      msg +="\nERROR:\n#{@stderr}" if @stderr
-      msg += "\nMESSAGE:\n#{@message}" if @message
+      msg = ''
+      msg = @stdout if @stdout
+      msg +="ERROR:\n#{@stderr}\n" if @stderr
+      msg += "MESSAGE:\n#{@message}\n" if @message
       msg
     end
-
-    private
 
     def to_hash
       Hash[
@@ -84,18 +74,35 @@ module Judge0
       ]
     end
 
+    def to_submission(response)
+      @stdout = response['stdout']
+      @time = response['time'].to_f
+      @memory = response['memory']
+      @stderr = response['stderr']
+      @compile_out = response['compile_out']
+      @message = response['message']
+      @status_id = response['status']['id']
+      @status_description = response['status']['description']
+
+      result
+    end
+
     def get_token
       resp = Faraday.post(Judge0.url('/submissions/?base64_encoded=false&wait=false'), to_hash)
       @token = JSON.parse(resp.body)['token']
     end
 
-    def wait_response(token)
+    def wait_response
       begin
-        resp = Faraday.get(Judge0.url("/submissions/#{token}"))
+        resp = Faraday.get(Judge0.url("/submissions/#{@token}"))
         body = JSON.parse(resp.body)
         puts "waiting: #{token} - #{body['status']['description']}" unless ENV['RAILS_ENV'] == 'test'
       end while body['status']['id'] <= 2
       body
+    end
+
+    def wait_response!
+      to_submission(wait_response)
     end
   end
 end

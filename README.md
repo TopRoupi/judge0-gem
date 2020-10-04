@@ -25,6 +25,7 @@ gem 'judge0'
 
 ### simple code execution
 
+
 ```ruby
 sub = Judge0::Submission.new do |config|
   config.source_code = 'p "Hello world!"'
@@ -33,6 +34,28 @@ end
 
 sub.run # hash of the submission result
 sub.stdout # output
+```
+
+### wait the response on another thread
+
+```ruby
+sub = Judge0::Submission.new do |config|
+  config.source_code = 'sleep 2; p "Hello world!"'
+  config.language_id = 72
+end
+
+sub.get_token
+
+t = Thread.new {
+  sub.wait_response!
+}
+
+puts "🛏️ waiting..." # doing something while the code is running
+
+t.join
+
+puts sub.output
+
 ```
 
 ### tests battery execution
