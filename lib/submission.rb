@@ -6,9 +6,9 @@ module Judge0
                   :max_processes_and_or_threads,
                   :enable_per_process_and_thread_time_limit,
                   :enable_per_process_and_thread_memory_limit,
-                  :max_file_size
+                  :max_file_size, :token
 
-    attr_reader :token, :stdout, :time, :memory, :stderr, :compile_out,
+    attr_reader :stdout, :time, :memory, :stderr, :compile_out,
                 :status_id, :status_description
 
     def initialize(options = {})

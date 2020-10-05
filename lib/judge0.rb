@@ -6,6 +6,14 @@ require 'submission.rb'
 module Judge0
   @@base_url = 'http://roupi.xyz:3000/'
 
+  def self.get_token(params)
+    Judge0::Submission.new(params).get_token
+  end
+
+  def self.wait_response(token)
+    Judge0::Submission.new(token: token).wait_response
+  end
+
   def self.base_url=(url)
     @@base_url = url
   end

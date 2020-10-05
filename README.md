@@ -58,6 +58,22 @@ puts sub.output
 
 ```
 
+##### same thing but without creating a Judge0::submission object
+
+this is useful when you are trying to wait the response on a rails job but cant pass a submission as a params without writing a serializer, maybe in future i will make a job serializer and configure it out of the box
+
+```ruby
+params = {
+  "source_code": "sleep 2; p 'Hello word!'",
+  "language_id": 72
+}
+
+token = Judge0.get_token(params)
+
+Judge0.wait_response(token)
+
+```
+
 ### tests battery execution
 
 ```ruby
